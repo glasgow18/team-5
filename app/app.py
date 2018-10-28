@@ -32,10 +32,8 @@ def leave_chat(user):
     user.chat_id = None
     chatroom.users.remove(user)
 
-def send_message(user, msg):
-    data = {'name' : user.username,
-            'msg'  : msg }
-    socket.emit(f'chatroom_{user.chat_id}', data, broadcast=True)
+def send_message():
+    socket.emit(f'chatroom_{user.chat_id}', '', broadcast=True)
 
 def flag_to_moderator(user, msg):
     pass
@@ -109,8 +107,6 @@ def logout():
 @login_required
 def all_chat():
     chatrooms = get_free_chatrooms(get_chatrooms()).values()
-    for chatroom in chatrooms:
-        print(chatroom.id)
     return render_template('all_chat.html', chatrooms=chatrooms)
 
 @app.route('/chat/<int:id>', methods = ['GET', 'POST'])
@@ -135,6 +131,19 @@ def chat(id):
        #chatroom.messages.append((current_user, message))
        #send_message(current_user, message)
        return ''
+
+@app.route('/chat/<int:id>/post_message', methods=['POST'])
+@login_required
+def post_chat(id):
+    chatroom = get_chatroom_by_id(id)
+    message = request.data
+    for word in flagged_words:
+       if word in message:
+           flag_to_moderator(current_user, message)
+           break;
+    chatroom.messages = getattr(chatroom, 'messages', []).append((current_user, message))
+    send_message()
+    return redirect(url_for('chat', id=id))
 
 @app.route('/buddy')
 @login_required

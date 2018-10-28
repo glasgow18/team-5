@@ -85,12 +85,18 @@ $(document).ready(function() {
 
 </div>
 
-  <div class="contact-form">
-                <div class="form-group">
-                  <label for="InputTextarea">Type your message</label>
-                  <textarea name="message" class="form-control" id="InputTextarea" rows="6" required=""></textarea>
-                </div>
-                <button type="submit" name="submit" class="btn btn-primary">SEND MESSAGE</button>
-              </form>
-  </div>
+ <form class="contact-form" action="/chat/{{ chatroom.id }}/post_message" method="post">
+   <label for="InputTextarea">Type your message</label>
+   <textarea name="message" class="form-control" id="InputTextarea" rows="6" required=""></textarea>
+   <button type="submit" name="submit" class="btn btn-primary">SEND MESSAGE</button>
+ </form> 
+ 
+<!-- <div class="contact-form">
+   <div class="form-group">
+     <label for="InputTextarea">Type your message</label>
+     <textarea name="message" class="form-control" id="InputTextarea" rows="6" required=""></textarea>
+   </div>
+   <button type="submit" name="submit" class="btn btn-primary">SEND MESSAGE</button>
+</form>
+</div>-->
 {% endblock %}
